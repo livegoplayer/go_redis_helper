@@ -9,7 +9,7 @@ import (
 var redisClient *redis.Client
 var prefix string
 
-func InitRedisHelper(host string, port string, password string, db int, pre string) {
+func InitRedisHelper(host string, port string, password string, db int, pre string, readTimeOut time.Duration) {
 
 	if host == "" {
 		host = "127.0.0.1"
@@ -19,11 +19,16 @@ func InitRedisHelper(host string, port string, password string, db int, pre stri
 		port = "6379"
 	}
 
+	if readTimeOut == 0 {
+		readTimeOut = 100 * time.Millisecond
+	}
+
 	// 根据redis配置初始化一个客户端
 	redisClient = redis.NewClient(&redis.Options{
-		Addr:     host + ":" + port, // redis地址
-		Password: password,          // redis密码，没有则留空
-		DB:       db,                // 默认数据库，默认是0
+		Addr:        host + ":" + port, // redis地址
+		Password:    password,          // redis密码，没有则留空
+		DB:          db,                // 默认数据库，默认是0
+		ReadTimeout: readTimeOut,       //最大访问超时时间，这个以外就直接访问数据库吧
 	})
 
 	prefix = pre
