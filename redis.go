@@ -46,7 +46,7 @@ func GetCacheData(key string) string {
 	return redisClient.Get(getRealKey(key)).Val()
 }
 
-func SetCacheData(key string, value []byte, expire time.Duration) {
+func SetCacheData(key string, value string, expire time.Duration) {
 	redisClient.Set(getRealKey(key), value, expire)
 }
 
